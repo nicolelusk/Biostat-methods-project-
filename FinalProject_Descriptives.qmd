@@ -1,0 +1,33 @@
+---
+title: "Descriptive Statistics"
+format: html
+---
+
+### Research Question and Variables to be Included
+
+Research Question and Variables to be included
+
+```{r}
+library("here")
+library("haven")
+Demographics<-read_xpt(here("DEMO_L.xpt"))
+Fasting<-read_xpt(here("FASTQX_L.xpt"))
+Insulin<-read_xpt(here("INS_L.xpt"))
+Cholesterol<-read_xpt(here("TCHOL_L.xpt"))
+```
+
+
+### Single Variable Visualizations
+
+Numerical and graphical descriptions for each variable 
+
+### Bivariate Visualization 
+
+Variables Jointly, bivariate between dependent and outcome 
+
+
+### Summary of Trends Observed so far
+
+trends observed after initial visualization 
+
+
