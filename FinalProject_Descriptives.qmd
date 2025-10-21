@@ -5,7 +5,11 @@ format: html
 
 ### Research Question and Variables to be Included
 
-Research Question and Variables to be included
+How does fasting influence insulin and cholesterol levels in adult men and women? 
+
+In our final project we will look at gender, length of food fast (hours), length of coffee/tea fast (hours),
+
+We will be assessing two continuous outcome variables outcome, insulin and cholesterol 
 
 ```{r}
 library("here")
