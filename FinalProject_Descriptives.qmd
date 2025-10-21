@@ -8,9 +8,9 @@ format: html
 
 How does fasting influence insulin and cholesterol levels in adult men and women? 
 
-In our final project we will look at gender, length of food fast (hours), length of coffee/tea fast (hours),
+In our final project we will look at gender, length of food fast (hours), length of coffee/tea fast (hours), length of alcohol fast(hours) to understand how different fasting aspect will affect two continuous outcome variables, insulin and cholesterol. 
 
-We will be assessing two continuous outcome variables outcome, insulin and cholesterol 
+We will also take into account individuals that have diabetes, as their insulin regulation is compromised. 
 
 ```{r}
 library("here")
@@ -20,7 +20,44 @@ Fasting<-read_xpt(here("FASTQX_L.xpt"))
 Insulin<-read_xpt(here("INS_L.xpt"))
 Cholesterol<-read_xpt(here("TCHOL_L.xpt"))
 Diabetes<-read_xpt(here("DIQ_L.xpt"))
+
+
+FullData_df<-Demographics|>
+  full_join(Fasting, by = "SEQN")|>
+  full_join(Insulin, by = "SEQN")|>
+  full_join(Cholesterol, by = "SEQN")|>
+  full_join(Diabetes, by = "SEQN")
+
+Data_df<-FullData_df|> 
+  select("SEQN", "RIAGENDR", "RIDAGEYR", "PHQ020", "PHACOFHR", "PHQ030", "PHAALCHR", "PHAFSTHR", "LBXTC", "LBXIN", "DIQ010", "DIQ050", "DIQ160")|>
+  rename("Sequence" = SEQN,
+         "Sex" = RIAGENDR,
+         "Age" = RIDAGEYR,
+        "Coffee_or_Tea_Factor" = PHQ020, "Hrs_CoffeeTea" = PHACOFHR, 
+        "Alcohol_Factor" = PHQ030, "Hrs_Alcohol" = PHAALCHR,
+        "Hrs_Food" = PHAFSTHR, 
+        "Cholesterol" = LBXTC,
+        "Insulin" = LBXIN,
+        "Diabetes" = DIQ010, "Taking_Insulin" = DIQ050, "Prediabetes" = DIQ160)|>
+  mutate(Sex = case_when(Sex == 1 ~"male", 
+                         Sex == 2 ~ "female"),
+         Coffee_or_Tea_Factor = case_when(Coffee_or_Tea_Factor == 1 ~ "yes",
+                                          Coffee_or_Tea_Factor == 2 ~"no",
+                                          .default = NA),
+         Alcohol_Factor = case_when(Alcohol_Factor == 1 ~ "yes",
+                                 Alcohol_Factor == 2 ~ "no", 
+                                 .default = NA),
+         Diabetes = ifelse(Diabetes == 1, "yes", "other"),
+         Prediabetes = ifelse(Prediabetes == 1, "yes", "other"),
+         Taking_Insulin = ifelse(Taking_Insulin == 1, "yes", "other"))
+
 ```
+
+Cholesterol = mg/dL
+Insulin = uU/mL
+
+Coffee_or_Tea_Factor = Whether or not an individual fasted from coffee/tea
+Same as alcohol 
 
 
 ### Single Variable Visualizations
