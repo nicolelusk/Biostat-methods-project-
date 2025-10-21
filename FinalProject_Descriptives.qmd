@@ -62,7 +62,54 @@ Same as alcohol
 
 ### Single Variable Visualizations
 
-Numerical and graphical descriptions for each variable 
+
+
+#### Age
+
+```{r}
+Data_df|>summarise(mean = mean(Age),
+                   sd = sd(Age))
+
+ggplot(data = Data_df, aes(x = Age))+
+  geom_histogram()+
+  theme_minimal()
+```
+
+From our exploration we can see that the distribution of sex in our dataset is a little bimodal, with more individuals between 0-20 and 60-80. In our numerical summary we can see that the mean is 38.3 years old. 
+
+#### Coffee Fast & How Long
+
+```{r}
+Data_df|>group_by(Coffee_or_Tea_Factor)|>
+  filter(Coffee_or_Tea_Factor == "no"|
+           Coffee_or_Tea_Factor == "yes")|>
+  summarise(n = n())
+
+coffee_fast<-Data_df|> filter(Coffee_or_Tea_Factor == "yes")
+
+ggplot(data = coffee_fast, aes(y = Hrs_CoffeeTea))+
+  geom_boxplot()+
+  theme_minimal()
+
+coffee_fast|> summarise(mean = mean(Hrs_CoffeeTea),
+                        sd = sd(Hrs_CoffeeTea))
+```
+
+Here we can see that only 29 people fasted from coffee/tea. Those that did fast are displayed in the above boxplot, which shows us that the majority of fasting time lies between ~4-11 hours. From a specific numerical summary we can see that the mean fasting time from coffee and tea was 7.55, and there was some spread with the standard deviation falling at 5.88.
+
+#### Cholesterol 
+
+```{r}
+Data_df|> summarise( mean = mean(Cholesterol, na.rm = TRUE),
+                     sd = sd(Cholesterol, na.rm = TRUE))
+
+ggplot(data = Data_df, aes(x = Cholesterol))+
+  geom_histogram()+
+  theme_minimal()
+```
+
+We can see that cholesterol presents as a unimodal distribution, with a mean around 182 and sd of 42.3. From our histogram, we can see the peak seems to be localized between the 150 and 250 range. 
+
 
 ### Bivariate Visualization 
 
