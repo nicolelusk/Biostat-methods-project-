@@ -36,4 +36,7 @@ Variables Jointly, bivariate between dependent and outcome
 
 trends observed after initial visualization 
 
+```{r}
+print(4)
+```
 
