@@ -12,6 +12,16 @@ In our final project we will look at gender, age, and length of food fast (hours
 
 We will also take into account individuals that have diabetes, as their insulin regulation is compromised. 
 
+### Trends Observed Thusfar
+
+In our visualization we can see that the data has a similar number of men and women, with the most common ages being 0-20 and 60-80. The ages appear to be consistent across gender. 
+
+Initially, we wanted to observe fasting across food as well as tea and coffee and alcohol. However, there were not many people who reported fasting from either coffee and tea or alcohol, so this data may not be helpful is our assessment since most of the values for these are missing. The average food fast was 8.59 hours. Food fasting alone has a low correlation with both our insulin and cholesterol levels. 
+
+Cholesterol levels appear to be slightly higher in females and insulin levels appear to be slightly lower in females when compared to males. Age does not appear to be strongly correlated with cholesterol. However, we noted that the trends in people with diabetes differ from those without diabetes. Similarly, there was not a strong observation between just age and insulin levels. 
+
+Furthermore we found there there was not a correlation between insulin and cholesterol levels. 
+
 ```{r}
 library("here")
 library("haven")
@@ -122,7 +132,7 @@ ggplot(data = Data_df, aes(x = Hrs_Food))+
   theme_minimal()
 ```
 
-In our exploration of food fast we can see that the average fast last 8.59 hours and that the standard deviation is 5.64. In our visual, we can see that the distribution of food fast is bi-modal, with popular fast lengths ~4 and ~15 hours. After the second peak, the distribution falls drastically with much smaller numvers of individuals fasting for over 20 hours. 
+In our exploration of food fast we can see that the average fast last 8.59 hours and that the standard deviation is 5.64. In our visual, we can see that the distribution of food fast is bi-modal, with popular fast lengths ~4 and ~15 hours. After the second peak, the distribution falls drastically with much smaller numbers of individuals fasting for over 20 hours. 
 
 #### Diabetes & Insulin Usage 
 
@@ -204,12 +214,13 @@ ggplot(data = Data_df, aes(x = Hrs_Food, y = Cholesterol, color = factor(Diabete
   
 
 #ggplot(data = Data_df, aes(x = Hrs_Alcohol, y = Cholesterol, color = factor(Diabetes)))+
- # geom_point(na.rm = TRUE)
+#  geom_point(na.rm = TRUE)
 
 #ggplot(data = Data_df, aes(x = Hrs_CoffeeTea, y = Cholesterol, color = factor(Diabetes)))+
- # geom_point(na.rm = TRUE)
+#  geom_point(na.rm = TRUE)
 ```
 This plot shows the hours fasted and its impact on cholesterol for the whole population. The correlation is .03205494. The scatter plot hows that those with diabetes are less impacted than those without by hours fasted. We can see that there are less values between 20 and 30 hours fasted from food. 
+
 
 ```{r}
 cor(Data_df$Hrs_Food, Data_df$Insulin, use = "pairwise.complete.obs")
@@ -220,13 +231,20 @@ ggplot(data = Data_df, aes(x = Hrs_Food, y = Insulin, color = factor(Diabetes)))
               aes(color = factor (Diabetes), group = factor(Diabetes)))+
   labs(color = "Diabetes Status")
 
+ggplot(data = Data_df, aes(x = Hrs_Food, y = Insulin, color = factor(Taking_Insulin)))+
+  geom_point(na.rm = TRUE)+
+  geom_smooth(method = 'lm', se = FALSE, 
+              aes(color = factor (Taking_Insulin), group = factor(Taking_Insulin)))+
+  labs(color = "Taking Insulin Status")
+
 #ggplot(data = Data_df, aes(x = Hrs_Alcohol, y = Insulin, color = factor(Diabetes)))+
 #  geom_point(na.rm = TRUE)
 
 #ggplot(data = Data_df, aes(x = Hrs_CoffeeTea, y = Insulin, color = factor(Diabetes)))+
 #  geom_point(na.rm = TRUE)
 ```
-The correlation of hours fasted from food and insulin levels is -.1212528. From the scatterplot we can see that with the exception of one person who had an insulin level over 600 uU/ml, all of the data points above 200 uU/ml have diabetes. Additionally, the line of people with diabetes appears to decrease, while line of people who do not appears fairly flat.  
+The correlation of hours fasted from food and insulin levels is -.1212528. From the scatterplot we can see that with the exception of one person who had an insulin level over 600 uU/ml, all of the data points above 200 uU/ml have diabetes. Additionally, the line of people with diabetes appears to decrease, while line of people who do not appears fairly flat. 
+Furthermore, in the graph colored for people taking insulin, we can see that while the people with diabetes are similar to those who are taking insulin, as is expected, they are not exactly the same. The line of people taking insulin appears to have a smaller average value of the slope than those with diabetes. 
 
 ```{r}
 Data_df %>%
@@ -250,7 +268,7 @@ ggplot(data = Data_df, aes(x = Sex, y = Cholesterol))+
 #boxplot of cholesterol for each sex 
 ```
 
-The mean cholesterol level for women (186.1772) was about 10 mg/dL higher than the mean for men (176.1122). 
+The mean cholesterol level for women (186.1772 mg/dL) was about 10 mg/dL higher than the mean for men (176.1122 mg/dL). Both men ad women have similar standard deviation, about 42mg/dL. The box plots both have many outliers with high cholesterol, and the females have one low outlier with a cholesterol level of 63. The male and female box plots appear to have a similar shape, but the mens distribution is centered around a median of 173 mg/dL while the women's is centered around 182, and is therefore shifted higher. Since both medians are lower than the means, and there are so many high outliers, we can conclude that the data is skewed right. 
 
 ```{r}
 Data_df %>%
@@ -272,8 +290,12 @@ ggplot(data = Data_df, aes(x = Sex, y = Insulin))+
   geom_bar(stat = "summary", fun = "mean")
 #average insulin level for each sex
 ```
+The female mean insulin level is 14.13882 uU/ml, this is about 1.3 less than the mean insulin level of the males of 15.42506. The males have a median of 10.040 uU/ml, since this is lower than the mean, we can conclude that this is skewed right. The same is true for the females who have a median of 9.345 uU/ml. Since the bar graph shows the mean values because the number of men and women in the sample are different, we can see that the means vary. 
+
+
 ```{r}
 cor(Data_df$Age, Data_df$Cholesterol, use = "pairwise.complete.obs")
+
 
 ggplot(data = Data_df, aes(x = Age, y = Cholesterol, color = factor(Diabetes)))+
   geom_point(na.rm = TRUE)+
@@ -282,6 +304,8 @@ ggplot(data = Data_df, aes(x = Age, y = Cholesterol, color = factor(Diabetes)))+
   labs(color = "Diabetes Status")
 
 ```
+
+The correlation between age and cholesterol level is .2225634. Our dot plot shows that the values vary across ages, the trend increasing slightly. However, it is important to note that the trend line of people with diabetes following the opposite pattern, as age increases in people with diabetes, the cholesterol level decreases. 
 
 ```{r}
 cor(Data_df$Age, Data_df$Insulin, use = "pairwise.complete.obs")
@@ -294,7 +318,38 @@ ggplot(data = Data_df, aes(x = Age, y = Insulin, color = factor(Diabetes)))+
 
 ```
 
+The correlation of Age and Insulin level is -0.01276559. The scatterplot shows most of the values consistent with age. The values that we noted had high insulin levels appear to mostly be in adults over 55. The outlier without diabetes with a high insulin level is a very young participant. Most of the non-diabetes subjects appear to have consistent insulin levels throughout the age groups. 
 
-### Summary of Trends Observed so far
+```{r}
+Data_df %>%
+  drop_na(Sex, Age) %>%
+  group_by(Sex) %>%
+  summarise(n = n(),
+            mean = mean(Age),
+            median = median(Age),
+            min = min(Age),
+            max = max(Age),
+            q25 = quantile(Age,.25), # 25th percentile (1st quartile)
+            q75 = quantile(Age,.75), # 75ht percentile (3rd quartile)
+            var = var(Age),
+            sd = sd(Age)) %>%
+  mutate(IQR = q75-q25, 
+         range = max - min)
 
-trends observed after initial visualization 
+
+ggplot(data = Data_df, aes(x = Sex, y = Age))+
+  geom_boxplot()
+```
+
+The mean age of the females is 39.37 years old and the mean age of the males is 37.12 years old. Both populations have minimum values of 0 and maximum values of 80. Both also have standard deviations around 25. Looking at the box plots, we can see that the men and women samples look to be similar across the agr groups. 
+
+```{r}
+cor(Data_df$Cholesterol, Data_df$Insulin, use = "pairwise.complete.obs")
+
+ggplot(data = Data_df, aes(x = Cholesterol, y = Insulin, color = factor(Diabetes)))+
+  geom_point(na.rm = TRUE)+
+  geom_smooth(method = 'lm', se = FALSE, 
+              aes(color = factor (Diabetes), group = factor(Diabetes)))+
+  labs(color = "Diabetes Status")
+```
+The correlation between the insulin and cholesterol levels is -0.08358265, As we can see from the graph, many of the outliers with very high insulin have lower cholesterol levels. 
