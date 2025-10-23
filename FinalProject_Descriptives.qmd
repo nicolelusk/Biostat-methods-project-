@@ -15,6 +15,8 @@ We will also take into account individuals that have diabetes, as their insulin 
 ```{r}
 library("here")
 library("haven")
+library("tidyverse")
+library("ggplot2")
 Demographics<-read_xpt(here("DEMO_L.xpt"))
 Fasting<-read_xpt(here("FASTQX_L.xpt"))
 Insulin<-read_xpt(here("INS_L.xpt"))
@@ -113,14 +115,43 @@ We can see that cholesterol presents as a unimodal distribution, with a mean aro
 
 ### Bivariate Visualization 
 
-Variables Jointly, bivariate between dependent and outcome 
+```{r}
+ggplot(data = Data_df, aes(x = Hrs_Food, y = Cholesterol, color = factor(Diabetes)))+
+  geom_point(na.rm = TRUE)+
+  geom_smooth(method = 'lm', se = FALSE)+
+  
+
+ggplot(data = Data_df, aes(x = Hrs_Alcohol, y = Cholesterol, color = factor(Diabetes)))+
+  geom_point(na.rm = TRUE)
+
+ggplot(data = Data_df, aes(x = Hrs_CoffeeTea, y = Cholesterol, color = factor(Diabetes)))+
+  geom_point(na.rm = TRUE)
+```
+These plots show the hours fasted 
+```{r}
+ggplot(data = Data_df, aes(x = Hrs_Food, y = Insulin, color = factor(Diabetes)))+
+  geom_point(na.rm = TRUE)
+
+ggplot(data = Data_df, aes(x = Hrs_Alcohol, y = Insulin, color = factor(Diabetes)))+
+  geom_point(na.rm = TRUE)
+
+ggplot(data = Data_df, aes(x = Hrs_CoffeeTea, y = Insulin, color = factor(Diabetes)))+
+  geom_point(na.rm = TRUE)
+```
+
+
+```{r}
+ggplot(data = Data_df, aes(x = Sex, y = Cholesterol))+
+  geom_boxplot()
+#boxplot of cholesterol for each sex 
+
+ggplot(data = Data_df, aes(x = Sex, y = Insulin))+
+  geom_bar(stat = "summary", fun = "mean")
+#average insulin level for each sex
+```
+
 
 
 ### Summary of Trends Observed so far
 
 trends observed after initial visualization 
-
-```{r}
-print(4)
-```
-
