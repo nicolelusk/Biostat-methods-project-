@@ -197,7 +197,9 @@ Finally, looking at our last outcome variable insulin, we can see in our visuali
 ```{r}
 ggplot(data = Data_df, aes(x = Hrs_Food, y = Cholesterol, color = factor(Diabetes)))+
   geom_point(na.rm = TRUE)+
-  geom_smooth(method = 'lm', se = FALSE)
+  geom_smooth(method = 'lm', se = FALSE, 
+              aes(color = factor (Diabetes), group = factor(Diabetes)))+
+  labs(color = "Diabetes Status")
   
 
 ggplot(data = Data_df, aes(x = Hrs_Alcohol, y = Cholesterol, color = factor(Diabetes)))+
