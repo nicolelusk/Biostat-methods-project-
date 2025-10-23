@@ -8,7 +8,7 @@ format: html
 
 How does fasting influence insulin and cholesterol levels in adult men and women? 
 
-In our final project we will look at gender, length of food fast (hours), length of coffee/tea fast (hours), length of alcohol fast(hours) to understand how different fasting aspect will affect two continuous outcome variables, insulin and cholesterol. 
+In our final project we will look at gender, age, and length of food fast (hours) to understand how different fasting aspect will affect two continuous outcome variables, insulin and cholesterol. 
 
 We will also take into account individuals that have diabetes, as their insulin regulation is compromised. 
 
@@ -185,8 +185,6 @@ ggplot(data = Data_InsulinLT200, aes(x = Insulin))+
   geom_histogram()+
   theme_minimal()
 
-
-
 ```
 
 Finally, looking at our last outcome variable insulin, we can see in our visualizations that there are some pretty extreme outliers. Overall, we obtain a mean insulin level of 14.7uU/mL and a standard deviation of 26.1uU/mL. If we are to restrict our range of insulin to <100uU/mL, we can a better understanding of the pattern for the majority of subjects. When we do so we can see that our mean decreases to 13uU/mL and standard deviation of 11.5uU/mL, showing that the outliers are skewing the summary statistics. We can also see in our new graphs that the majority fall around that single peak near 12.5, and then tapers off by 25uU/mL.
@@ -195,6 +193,9 @@ Finally, looking at our last outcome variable insulin, we can see in our visuali
 ### Bivariate Visualization 
 
 ```{r}
+cor(Data_df$Hrs_Food, Data_df$Cholesterol, use = "pairwise.complete.obs")
+
+
 ggplot(data = Data_df, aes(x = Hrs_Food, y = Cholesterol, color = factor(Diabetes)))+
   geom_point(na.rm = TRUE)+
   geom_smooth(method = 'lm', se = FALSE, 
@@ -202,35 +203,96 @@ ggplot(data = Data_df, aes(x = Hrs_Food, y = Cholesterol, color = factor(Diabete
   labs(color = "Diabetes Status")
   
 
-ggplot(data = Data_df, aes(x = Hrs_Alcohol, y = Cholesterol, color = factor(Diabetes)))+
-  geom_point(na.rm = TRUE)
+#ggplot(data = Data_df, aes(x = Hrs_Alcohol, y = Cholesterol, color = factor(Diabetes)))+
+ # geom_point(na.rm = TRUE)
 
-ggplot(data = Data_df, aes(x = Hrs_CoffeeTea, y = Cholesterol, color = factor(Diabetes)))+
-  geom_point(na.rm = TRUE)
+#ggplot(data = Data_df, aes(x = Hrs_CoffeeTea, y = Cholesterol, color = factor(Diabetes)))+
+ # geom_point(na.rm = TRUE)
 ```
-These plots show the hours fasted 
+This plot shows the hours fasted and its impact on cholesterol for the whole population. The correlation is .03205494. The scatter plot hows that those with diabetes are less impacted than those without by hours fasted. We can see that there are less values between 20 and 30 hours fasted from food. 
+
 ```{r}
+cor(Data_df$Hrs_Food, Data_df$Insulin, use = "pairwise.complete.obs")
+
 ggplot(data = Data_df, aes(x = Hrs_Food, y = Insulin, color = factor(Diabetes)))+
-  geom_point(na.rm = TRUE)
+  geom_point(na.rm = TRUE)+
+  geom_smooth(method = 'lm', se = FALSE, 
+              aes(color = factor (Diabetes), group = factor(Diabetes)))+
+  labs(color = "Diabetes Status")
 
-ggplot(data = Data_df, aes(x = Hrs_Alcohol, y = Insulin, color = factor(Diabetes)))+
-  geom_point(na.rm = TRUE)
+#ggplot(data = Data_df, aes(x = Hrs_Alcohol, y = Insulin, color = factor(Diabetes)))+
+#  geom_point(na.rm = TRUE)
 
-ggplot(data = Data_df, aes(x = Hrs_CoffeeTea, y = Insulin, color = factor(Diabetes)))+
-  geom_point(na.rm = TRUE)
+#ggplot(data = Data_df, aes(x = Hrs_CoffeeTea, y = Insulin, color = factor(Diabetes)))+
+#  geom_point(na.rm = TRUE)
 ```
-
+The correlation of hours fasted from food and insulin levels is -.1212528. From the scatterplot we can see that with the exception of one person who had an insulin level over 600 uU/ml, all of the data points above 200 uU/ml have diabetes. Additionally, the line of people with diabetes appears to decrease, while line of people who do not appears fairly flat.  
 
 ```{r}
+Data_df %>%
+  drop_na(Sex, Cholesterol) %>%
+  group_by(Sex) %>%
+  summarise(n = n(),
+            mean = mean(Cholesterol),
+            median = median(Cholesterol),
+            min = min(Cholesterol),
+            max = max(Cholesterol),
+            q25 = quantile(Cholesterol,.25), # 25th percentile (1st quartile)
+            q75 = quantile(Cholesterol,.75), # 75ht percentile (3rd quartile)
+            var = var(Cholesterol),
+            sd = sd(Cholesterol)) %>%
+  mutate(IQR = q75-q25, 
+         range = max - min)
+
+
 ggplot(data = Data_df, aes(x = Sex, y = Cholesterol))+
   geom_boxplot()
 #boxplot of cholesterol for each sex 
+```
+
+The mean cholesterol level for women (186.1772) was about 10 mg/dL higher than the mean for men (176.1122). 
+
+```{r}
+Data_df %>%
+  drop_na(Sex, Insulin) %>%
+  group_by(Sex) %>%
+  summarise(n = n(),
+            mean = mean(Insulin),
+            median = median(Insulin),
+            min = min(Insulin),
+            max = max(Insulin),
+            q25 = quantile(Insulin,.25), # 25th percentile (1st quartile)
+            q75 = quantile(Insulin,.75), # 75ht percentile (3rd quartile)
+            var = var(Insulin),
+            sd = sd(Insulin)) %>%
+  mutate(IQR = q75-q25, 
+         range = max - min)
 
 ggplot(data = Data_df, aes(x = Sex, y = Insulin))+
   geom_bar(stat = "summary", fun = "mean")
 #average insulin level for each sex
 ```
+```{r}
+cor(Data_df$Age, Data_df$Cholesterol, use = "pairwise.complete.obs")
 
+ggplot(data = Data_df, aes(x = Age, y = Cholesterol, color = factor(Diabetes)))+
+  geom_point(na.rm = TRUE)+
+  geom_smooth(method = 'lm', se = FALSE, 
+              aes(color = factor (Diabetes), group = factor(Diabetes)))+
+  labs(color = "Diabetes Status")
+
+```
+
+```{r}
+cor(Data_df$Age, Data_df$Insulin, use = "pairwise.complete.obs")
+
+ggplot(data = Data_df, aes(x = Age, y = Insulin, color = factor(Diabetes)))+
+  geom_point(na.rm = TRUE)+
+  geom_smooth(method = 'lm', se = FALSE, 
+              aes(color = factor (Diabetes), group = factor(Diabetes)))+
+  labs(color = "Diabetes Status")
+
+```
 
 
 ### Summary of Trends Observed so far
