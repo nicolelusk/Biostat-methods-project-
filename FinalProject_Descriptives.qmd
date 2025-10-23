@@ -63,7 +63,18 @@ Same as alcohol
 
 ### Single Variable Visualizations
 
+#### Sex 
 
+```{r}
+Data_df|>group_by(Sex)|>
+  summarise(n = n())
+
+ggplot(data = Data_df, aes(x = Sex))+
+  geom_bar()+
+  theme_minimal()
+```
+
+Here we can see that we have similar amounts of males and females in our dataset, but there about 800 more females than males. 
 
 #### Age
 
@@ -98,6 +109,45 @@ coffee_fast|> summarise(mean = mean(Hrs_CoffeeTea),
 
 Here we can see that only 29 people fasted from coffee/tea. Those that did fast are displayed in the above boxplot, which shows us that the majority of fasting time lies between ~4-11 hours. From a specific numerical summary we can see that the mean fasting time from coffee and tea was 7.55, and there was some spread with the standard deviation falling at 5.88.
 
+
+#### Length of Food Fast 
+
+```{r}
+Data_df|> summarise(mean = mean(Hrs_Food, na.rm = TRUE),
+                    median = median(Hrs_Food, na.rm = TRUE),
+                    sd= sd(Hrs_Food, na.rm = TRUE))
+
+ggplot(data = Data_df, aes(x = Hrs_Food))+
+  geom_histogram()+
+  theme_minimal()
+```
+
+In our exploration of food fast we can see that the average fast last 8.59 hours and that the standard deviation is 5.64. In our visual, we can see that the distribution of food fast is bi-modal, with popular fast lengths ~4 and ~15 hours. After the second peak, the distribution falls drastically with much smaller numvers of individuals fasting for over 20 hours. 
+
+#### Diabetes & Insulin Usage 
+
+```{r}
+Data_df|>group_by(Diabetes)|>
+  summarise(n = n())
+
+ggplot(data = Data_df, aes(x = Diabetes))+
+  geom_bar()+
+  theme_minimal() 
+
+Data_df|>filter(Diabetes == "yes")|>
+  group_by(Taking_Insulin)|>
+  summarise(n = n())
+
+Diabetes_only<-Data_df|>filter(Diabetes == "yes")
+
+ggplot(data = Diabetes_only, aes(x = Taking_Insulin))+
+  geom_bar()+
+  theme_minimal()
+
+```
+
+Looking at our data we can see that although a majority do not have diabetes, we do have a subgroup of 1081 individuals who answered "yes" in the survey asking if they have ever been diagnosed with diabetes. We also want to show that out of those 1081 individuals 344 are actively taking insulin. This will be something to be aware of as we continue to analyze the data, and we may want to exclude these individuals. 
+
 #### Cholesterol 
 
 ```{r}
@@ -109,7 +159,37 @@ ggplot(data = Data_df, aes(x = Cholesterol))+
   theme_minimal()
 ```
 
-We can see that cholesterol presents as a unimodal distribution, with a mean around 182 and sd of 42.3. From our histogram, we can see the peak seems to be localized between the 150 and 250 range. 
+
+We can see that cholesterol presents as a unimodal distribution, with a mean around 182mg/dL and sd of 42.3mg/dL. From our histogram, we can see the peak seems to be localized between the 150mg/dL and 250mg/dL range. 
+
+#### Insulin 
+
+```{r}
+Data_df|> summarise( mean = mean(Insulin, na.rm = TRUE),
+                     sd = sd(Insulin, na.rm = TRUE))
+
+ggplot(data = Data_df, aes(x = Insulin))+
+  geom_boxplot()+
+  theme_minimal()
+
+Data_InsulinLT200<-Data_df|> filter(Insulin < 100)
+
+Data_InsulinLT200|> summarise( mean = mean(Insulin, na.rm = TRUE),
+                     sd = sd(Insulin, na.rm = TRUE))
+
+ggplot(data = Data_InsulinLT200, aes(x = Insulin))+
+  geom_boxplot()+
+  theme_minimal()
+
+ggplot(data = Data_InsulinLT200, aes(x = Insulin))+
+  geom_histogram()+
+  theme_minimal()
+
+
+
+```
+
+Finally, looking at our last outcome variable insulin, we can see in our visualizations that there are some pretty extreme outliers. Overall, we obtain a mean insulin level of 14.7uU/mL and a standard deviation of 26.1uU/mL. If we are to restrict our range of insulin to <100uU/mL, we can a better understanding of the pattern for the majority of subjects. When we do so we can see that our mean decreases to 13uU/mL and standard deviation of 11.5uU/mL, showing that the outliers are skewing the summary statistics. We can also see in our new graphs that the majority fall around that single peak near 12.5, and then tapers off by 25uU/mL.
 
 
 ### Bivariate Visualization 
