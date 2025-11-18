@@ -1,6 +1,6 @@
 ---
 title: "Final_Project_Methods"
-author: "Nicole Lusk"
+author: "Nicole Lusk and Kaitlin Heintzman"
 date: "2025-11-18"
 output: html_document
 ---
@@ -47,22 +47,158 @@ Data_df<-FullData_df|>
          Taking_Insulin = ifelse(Taking_Insulin == 1, "yes", "other"))
 ```
 
+```{r}
+women_only<-Data_df|>
+  filter(Sex == "female")
+```
 
 # Making the Models 
 
-
-
+```{r}
+Cholesterol_lm<-lm(Cholesterol ~ Hrs_Food, data = Data_df)
+Insulin_lm<-lm(Insulin ~ Hrs_Food, data = Data_df)
+```
 
 # Assumption
 
 ## Linearity 
 
+### Cholesterol
+```{r}
+ggplot(data = Data_df, aes(x = Hrs_Food, y = Cholesterol))+
+  geom_point()+
+  theme_minimal()+
+  labs(title = "Fasting vs. Cholesterol")
+```
+
+### Insulin
+
+```{r}
+ggplot(data = Data_df, aes(x = Hrs_Food, y = Insulin))+
+  geom_point()+
+  theme_minimal()+
+  labs(title = "Fasting vs. Insulin")
+```
+
+### By Sex 
+
+#### Cholesterol
+```{r}
+ggplot(data = Data_df, aes(x = Hrs_Food, y = Cholesterol))+
+  geom_point()+
+  theme_minimal()+
+  labs(title = "Fasting vs. Cholesterol")+
+  facet_wrap(~Sex)
+```
+
+#### Insulin
+
+```{r}
+ggplot(data = Data_df, aes(x = Hrs_Food, y = Insulin))+
+  geom_point()+
+  theme_minimal()+
+  labs(title = "Fasting vs. Insulin")+
+  facet_wrap(~Sex)
+```
+
+### By Diabetes 
+
+#### Cholesterol
+```{r}
+ggplot(data = Data_df, aes(x = Hrs_Food, y = Cholesterol))+
+  geom_point()+
+  theme_minimal()+
+  labs(title = "Fasting vs. Cholesterol")+
+  facet_wrap(~Diabetes)
+```
+
+#### Insulin
+
+```{r}
+ggplot(data = Data_df, aes(x = Hrs_Food, y = Insulin))+
+  geom_point()+
+  theme_minimal()+
+  labs(title = "Fasting vs. Insulin")+
+  facet_wrap(~Diabetes)
+
+```
+
+### By Age Groups
+
+```{r}
+Data_df<-Data_df|> filter(Age >= 18)|>
+  mutate(Age_Group = if_else(Age > 65, "retired", "working")
+  )
+```
+
+#### Cholesterol
+```{r}
+ggplot(data = Data_df, aes(x = Hrs_Food, y = Cholesterol))+
+  geom_point()+
+  theme_minimal()+
+  labs(title = "Fasting vs. Cholesterol")+
+  facet_wrap(~Age_Group)
+```
+
+#### Insulin
+
+```{r}
+ggplot(data = Data_df, aes(x = Hrs_Food, y = Insulin))+
+  geom_point()+
+  theme_minimal()+
+  labs(title = "Fasting vs. Insulin")+
+  facet_wrap(~Age_Group)
+
+```
+
+For all of our groups, we can see that there is no curvature or concerning patterns across our independent variable of Hours Fasted from food, and therefore the assumptions for linearity are met. 
 
 ## Independence
 Since the data came from NHANES, we can assume that each person is independent from all other people, therefore these assumptions are met. 
 
-
 ## Normal Residuals 
 
+### Cholesterol
+```{r}
+qqnorm(Cholesterol_lm$residuals)
+qqline(Cholesterol_lm$residuals)
+```
+
+### Insulin
+```{r}
+qqnorm(Insulin_lm$residuals)
+qqline(Insulin_lm$residuals)
+
+
+# Possibly could transform insulin to meet assumptions
+qqnorm(log(Insulin_lm$residuals))
+qqline(log(Insulin_lm$residuals))
+```
 
 ## Equal Variance of Y for all values of X
+
+
+### Cholesterol
+
+```{r}
+data.frame(residuals = Cholesterol_lm$residuals,
+           yhat = Cholesterol_lm$fitted.values)|>
+  ggplot(aes(x = yhat, y= residuals))+
+  geom_point()+
+  theme_minimal()+
+  geom_hline(yintercept = 0)+
+  labs(x = "Fitted", y = "Residuals")
+
+```
+
+### Insulin
+```{r}
+data.frame(residuals = Insulin_lm$residuals,
+           yhat = Insulin_lm$fitted.values)|>
+  ggplot(aes(x = yhat, y= residuals))+
+  geom_point()+
+  theme_minimal()+
+  geom_hline(yintercept = 0)+
+  labs(x = "Fitted", y = "Residuals")
+```
+
