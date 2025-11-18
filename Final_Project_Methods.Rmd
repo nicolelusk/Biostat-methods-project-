@@ -1,30 +1,68 @@
 ---
-title: "Final_Project"
+title: "Final_Project_Methods"
 author: "Nicole Lusk"
 date: "2025-11-18"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r}
+
+library("here")
+library("haven")
+library("tidyverse")
+Demographics<-read_xpt(here("DEMO_L.xpt"))
+Fasting<-read_xpt(here("FASTQX_L.xpt"))
+Insulin<-read_xpt(here("INS_L.xpt"))
+Cholesterol<-read_xpt(here("TCHOL_L.xpt"))
+Diabetes<-read_xpt(here("DIQ_L.xpt"))
+
+
+FullData_df<-Demographics|>
+  full_join(Fasting, by = "SEQN")|>
+  full_join(Insulin, by = "SEQN")|>
+  full_join(Cholesterol, by = "SEQN")|>
+  full_join(Diabetes, by = "SEQN")
+
+Data_df<-FullData_df|> 
+  select("SEQN", "RIAGENDR", "RIDAGEYR", "PHQ020", "PHACOFHR", "PHQ030", "PHAALCHR", "PHAFSTHR", "LBXTC", "LBXIN", "DIQ010", "DIQ050", "DIQ160")|>
+  rename("Sequence" = SEQN,
+         "Sex" = RIAGENDR,
+         "Age" = RIDAGEYR,
+        "Coffee_or_Tea_Factor" = PHQ020, "Hrs_CoffeeTea" = PHACOFHR, 
+        "Alcohol_Factor" = PHQ030, "Hrs_Alcohol" = PHAALCHR,
+        "Hrs_Food" = PHAFSTHR, 
+        "Cholesterol" = LBXTC,
+        "Insulin" = LBXIN,
+        "Diabetes" = DIQ010, "Taking_Insulin" = DIQ050, "Prediabetes" = DIQ160)|>
+  mutate(Sex = case_when(Sex == 1 ~"male", 
+                         Sex == 2 ~ "female"),
+         Coffee_or_Tea_Factor = case_when(Coffee_or_Tea_Factor == 1 ~ "yes",
+                                          Coffee_or_Tea_Factor == 2 ~"no",
+                                          .default = NA),
+         Alcohol_Factor = case_when(Alcohol_Factor == 1 ~ "yes",
+                                 Alcohol_Factor == 2 ~ "no", 
+                                 .default = NA),
+         Diabetes = ifelse(Diabetes == 1, "yes", "other"),
+         Prediabetes = ifelse(Prediabetes == 1, "yes", "other"),
+         Taking_Insulin = ifelse(Taking_Insulin == 1, "yes", "other"))
 ```
 
-## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+# Making the Models 
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r cars}
-summary(cars)
-```
 
-## Including Plots
 
-You can also embed plots, for example:
+# Assumption
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+## Linearity 
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+## Independence
+Since the data came from NHANES, we can assume that each person is independent from all other people, therefore these assumptions are met. 
+
+
+## Normal Residuals 
+
+
+## Equal Variance of Y for all values of X
