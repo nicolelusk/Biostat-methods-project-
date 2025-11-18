@@ -59,7 +59,7 @@ Cholesterol_lm<-lm(Cholesterol ~ Hrs_Food, data = Data_df)
 Insulin_lm<-lm(Insulin ~ Hrs_Food, data = Data_df)
 ```
 
-# Assumption
+# Assumptions
 
 ## Linearity 
 
@@ -174,9 +174,9 @@ qqline(Insulin_lm$residuals)
 qqnorm(log(Insulin_lm$residuals))
 qqline(log(Insulin_lm$residuals))
 ```
+The residual for the Cholesterol is very normal, the ends curve slightly but overall they look pretty good. The residuals for the Insulin however look very logamarthic in shape. We can consider making the appropriate log transformation in order to match our SLR assumptions. 
 
 ## Equal Variance of Y for all values of X
-
 
 ### Cholesterol
 
@@ -201,4 +201,4 @@ data.frame(residuals = Insulin_lm$residuals,
   geom_hline(yintercept = 0)+
   labs(x = "Fitted", y = "Residuals")
 ```
-
+Our residuals look pretty good, there may be a small amount of fanning that we would put in our limitations, however over all both look sufficient. 
