@@ -91,9 +91,60 @@ Cholesterol_retired_lm <- lm(Cholesterol ~ Hrs_Food, data = Data_df, Age_Group =
 summary(Cholesterol_retired_lm)
 ```
 
-#Insulin Model
+## Diabetes 
+### Yes
+```{r}
+Cholesterol_retired_lm <- lm(Cholesterol ~ Hrs_Food, data = Data_df, Diabetes == "yes")
+summary(Cholesterol_retired_lm)
+```
+
+```{r}
+Cholesterol_retired_lm <- lm(Cholesterol ~ Hrs_Food, data = Data_df, Diabetes == "other")
+summary(Cholesterol_retired_lm)
+```
+
+
+# Insulin Model
 ```{r}
 Insulin_lm
 summary(Insulin_lm)
 ```
+
+## By Sex 
+### Female
+```{r}
+Insulin_female_lm <- lm(Insulin ~ Hrs_Food, data = Data_df, Sex == "female")
+summary(Insulin_female_lm)
+```
+
+### Male 
+```{r}
+Insulin_male_lm <- lm(Insulin ~ Hrs_Food, data = Data_df, Sex == "male")
+summary(Insulin_male_lm)
+```
+## Age 
+
+### Working
+```{r}
+Insulin_work_lm <- lm(Insulin ~ Hrs_Food, data = Data_df, Age_Group == "working")
+summary(Insulin_work_lm)
+```
+### Retired
+```{r}
+Insulin_retired_lm <- lm(Insulin ~ Hrs_Food, data = Data_df, Age_Group == "retired")
+summary(Insulin_retired_lm)
+```
+
+## Diabetes 
+### Yes
+```{r}
+Insulin_retired_lm <- lm(Insulin ~ Hrs_Food, data = Data_df, Diabetes == "yes")
+summary(Insulin_retired_lm)
+```
+
+```{r}
+Insulin_retired_lm <- lm(Insulin ~ Hrs_Food, data = Data_df, Diabetes == "other")
+summary(Insulin_retired_lm)
+```
+
 
