@@ -147,5 +147,52 @@ summary(Insulin_retired_lm)
 Insulin_retired_lm <- lm(log(Insulin) ~ Hrs_Food, data = Data_df, Diabetes == "other")
 summary(Insulin_retired_lm)
 ```
+# Graphs
 
+## Cholesterol 
+
+```{r}
+ggplot(data = Data_df, aes(x = Hrs_Food, y = Cholesterol))+
+  geom_point()+
+  theme_minimal()+
+  labs(title = "Fasting vs. Cholesterol") + 
+  geom_smooth(method = "lm")
+```
+
+### Sex 
+```{r}
+ggplot(data = Data_df, aes(x = Hrs_Food, y = Cholesterol))+
+  geom_point()+
+  theme_minimal()+
+  labs(title = "Fasting vs. Cholesterol") + 
+  facet_wrap(~ Sex) +
+  geom_smooth(method = "lm")
+```
+
+### Age
+```{r}
+ggplot(data = Data_df, aes(x = Age, y = Cholesterol))+
+  geom_point()+
+  theme_minimal()+
+  labs(title = "Age vs. Cholesterol") + 
+  geom_smooth(method = "lm")
+```
+```{r}
+ggplot(data = Data_df, aes(x = Age, y = Cholesterol))+
+  geom_point()+
+  theme_minimal()+
+  labs(title = "Age vs. Cholesterol") + 
+  facet_wrap(~ Age_Group) +
+  geom_smooth(method = "lm")
+```
+
+
+
+## Insulin
+```{r}
+ggplot(data = Data_df, aes(x = Hrs_Food, y = log(Insulin)))+
+  geom_point()+
+  theme_minimal()+
+  labs(title = "Fasting vs. Insulin")
+```
 
