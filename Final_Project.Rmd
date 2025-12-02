@@ -10,6 +10,8 @@ output: html_document
 library("here")
 library("haven")
 library("tidyverse")
+#install.packages("stargazer")
+#library(stargazer)
 Demographics<-read_xpt(here("DEMO_L.xpt"))
 Fasting<-read_xpt(here("FASTQX_L.xpt"))
 Insulin<-read_xpt(here("INS_L.xpt"))
@@ -57,6 +59,36 @@ Insulin_lm<-lm(Insulin ~ Hrs_Food, data = Data_df)
 ```{r}
 Cholesterol_lm
 summary(Cholesterol_lm)
+```
+
+## By Sex 
+### Female
+```{r}
+Cholesterol_female_lm <- lm(Cholesterol ~ Hrs_Food, data = Data_df, Sex == "female")
+summary(Cholesterol_female_lm)
+```
+
+### Male 
+```{r}
+Cholesterol_male_lm <- lm(Cholesterol ~ Hrs_Food, data = Data_df, Sex == "male")
+summary(Cholesterol_male_lm)
+```
+## Age 
+```{r}
+Data_df<-Data_df|> filter(Age >= 18)|>
+  mutate(Age_Group = if_else(Age > 65, "retired", "working")
+  )
+```
+
+### Working
+```{r}
+Cholesterol_work_lm <- lm(Cholesterol ~ Hrs_Food, data = Data_df, Age_Group == "working")
+summary(Cholesterol_work_lm)
+```
+### Retired
+```{r}
+Cholesterol_retired_lm <- lm(Cholesterol ~ Hrs_Food, data = Data_df, Age_Group == "retired")
+summary(Cholesterol_retired_lm)
 ```
 
 #Insulin Model
