@@ -178,10 +178,10 @@ ggplot(data = Data_df, aes(x = Age, y = Cholesterol))+
   geom_smooth(method = "lm")
 ```
 ```{r}
-ggplot(data = Data_df, aes(x = Age, y = Cholesterol))+
+ggplot(data = Data_df, aes(x = Hrs_Food, y = Cholesterol))+
   geom_point()+
   theme_minimal()+
-  labs(title = "Age vs. Cholesterol") + 
+  labs(title = "Fasting vs. Cholesterol By Age") + 
   facet_wrap(~ Age_Group) +
   geom_smooth(method = "lm")
 ```
@@ -205,6 +205,17 @@ ggplot(data = Data_df, aes(x = Hrs_Food, y = log(Insulin)))+
   facet_wrap(~ Sex) +
   geom_smooth(method = "lm")
 ```
+
+
+### Age
+```{r}
+ggplot(data = Data_df, aes(x = Age, y = log(Insulin)))+
+  geom_point()+
+  theme_minimal()+
+  labs(title = "Age vs. Insulin") +
+  geom_smooth(method = "lm")
+```
+
 
 ```{r}
 ggplot(data = Data_df, aes(x = Hrs_Food, y = log(Insulin)))+
